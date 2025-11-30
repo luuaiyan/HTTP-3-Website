@@ -1,0 +1,388 @@
+/*
+ * HTTP/3 Adventure - Global Styles
+ * 文件路径: /assets/css/styles.css
+ * 包含所有页面共享的样式、变量、导航和移动端适配。
+ */
+
+:root {
+    --bg-color: #0f172a;
+    --text-main: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-primary: #38bdf8;
+    --accent-secondary: #818cf8;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --gradient-text: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    /* 代码片段颜色 */
+    --code-bg: #1e293b;
+    --code-success: #6ee7b7;
+    --code-fail: #f87171;
+    --code-border: rgba(255, 255, 255, 0.1); /* 新增变量，以便 Tech Details Section 使用 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    padding-top: 5.5rem; 
+}
+
+/* 导航栏 */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    backdrop-filter: blur(16px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(15, 23, 42, 0.5);
+}
+
+/* Logo 样式 */
+.logo a {
+    text-decoration: none;
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.05em;
+    cursor: pointer;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-left: 2rem;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--accent-primary);
+}
+
+/* 汉堡菜单图标 */
+.menu-toggle {
+    display: none; 
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.menu-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: var(--accent-primary);
+    margin: 5px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+/* 页面头部 - Page Header 基础样式 */
+.page-header {
+    text-align: center;
+    /* 修正：增加底部填充，为 HTTP/3 检测工具的负边距留出安全空间 */
+    padding: 6rem 10% 8rem; 
+    min-height: 400px;
+}
+
+/* H1 基础渐变样式 */
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: var(--gradient-text); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* H1 图标着色，确保可见性 */
+.page-header h1 .h1-icon {
+    color: var(--accent-primary);
+    -webkit-text-fill-color: var(--accent-primary);
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* 底部状态栏和页脚 */
+footer {
+    padding: 2rem 5%;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.status-badge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 10px #22c55e;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================
+   新增 HTTP/3 检测工具的布局和样式调整
+   ========================================================== */
+
+/* Wrapper 用于定位和负边距覆盖 */
+.http3-check-wrapper {
+    padding: 0 10% 4rem; 
+    margin-top: -50px; /* 减少负边距以避免重叠 */
+    position: relative;
+    z-index: 10; 
+}
+
+/* 检测区域本身，移除多余背景 */
+.http3-check {
+    padding: 0; /* 移除内边距，由 wrapper 和 container 控制 */
+    background: none;
+}
+
+/* 核心容器：保持卡片风格，使其突出浮动 */
+.checker-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--card-bg); /* 使用卡片背景色 */
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* 突出阴影 */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 细微边框 */
+}
+
+/* 结果显示框样式：使用代码块背景 */
+.result-box {
+    min-height: 100px;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    background-color: var(--code-bg); /* 模仿代码输出区域背景 */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.5s ease;
+}
+
+.result-details {
+    display: block;
+    font-family: 'Fira Code', monospace;
+    color: var(--text-secondary);
+    white-space: pre-wrap; /* 允许换行 */
+    text-align: left; /* 详细信息靠左对齐 */
+    font-size: 0.9rem;
+}
+
+/* Sections 通用样式 (用于 index.html) */
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-top: 1rem;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.section-title p {
+    color: var(--accent-secondary);
+    font-size: 1.1rem;
+}
+
+.features {
+    padding: 4rem 10%;
+    background-color: var(--bg-color);
+}
+
+.features .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.features .card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* ==========================================================
+   原有的 HTTP/3 检测工具样式 (移动到新位置后，部分样式仍有效)
+   ========================================================== */
+
+/* 修正背景色和填充，适应新位置 */
+.http3-check {
+    /* padding: 5rem 10%; <--- 已在 .http3-check-wrapper 中处理 */
+    /* background-color: var(--code-bg); <--- 已在 .http3-check 中移除 */
+}
+
+.checker-container {
+    /* 样式已在上方 .checker-container 中继承/调整 */
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+#targetUrl {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+#checkButton {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--accent-primary);
+    color: var(--bg-color); 
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+#checkButton:hover:not(:disabled) {
+    background-color: #5edbfa;
+}
+
+#checkButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.result-box.success {
+    border-color: var(--code-success);
+    background-color: rgba(110, 231, 183, 0.1);
+}
+
+.result-box.fail {
+    border-color: var(--code-fail);
+    background-color: rgba(248, 113, 113, 0.1);
+}
+
+.result-status {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+
+/* ==========================================================
+   移动端适配 (保持不变，仅合并)
+   ========================================================== */
+@media (max-width: 768px) {
+    
+    /* 移动端菜单样式 */
+    .nav-links {
+        display: flex; 
+        flex-direction: column;
+        position: fixed; 
+        top: 5.5rem; 
+        left: 0;
+        width: 100%;
+        max-height: 0; 
+        overflow: hidden; 
+        background-color: var(--bg-color);
+        transition: max-height 0.4s ease-in-out, border-color 0.4s ease;
+        z-index: 999;
+        border-bottom: 2px solid transparent; 
+        padding: 0 5%;
+    }
+    
+    .nav-links.open {
+        max-height: 350px; 
+        border-bottom: 2px solid var(--accent-primary);
+    }
+    
+    .nav-links a {
+        margin: 0; 
+        padding: 1rem 0; 
+        text-align: center;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        width: 100%;
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
+    
+    /* 手机端显示汉堡图标 */
+    .menu-toggle {
+        display: block; 
+    }
+
+    .page-header h1 { font-size: 2.5rem; }
+
+    /* 移动端调整负边距 */
+    .http3-check-wrapper {
+        margin-top: -30px; /* 进一步减少以适应小屏 */
+    }
+}
+
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column;
+    }
+    #checkButton {
+        width: 100%;
+    }
+}

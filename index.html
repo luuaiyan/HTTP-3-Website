@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 - HTTP/3 Adventure</title>
+    
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <style>
+        /* ==========================================================
+           页面特有 CSS 样式
+           ========================================================== */
+        
+        /* 页面头部 - Page Header 独有背景 */
+        .page-header {
+            padding: 6rem 10% 8rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0) 35%); 
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Section Title 通用样式 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 1rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--accent-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* ==========================================================
+           HTTP/3 检测工具区域 (新位置样式)
+           ========================================================== */
+        
+        /* Wrapper 用于定位和负边距覆盖 */
+        .http3-check-wrapper {
+            padding: 0 10% 4rem; 
+            margin-top: -50px; /* 减少负边距，与 page-header 视觉衔接，同时避免重叠 */
+            position: relative;
+            z-index: 10; /* 确保在最前面 */
+        }
+        
+        /* 检测区域本身，移除多余背景 */
+        .http3-check {
+            padding: 0; 
+            background: none;
+        }
+        
+        /* Checker 容器：核心卡片样式，与 features card 一致 */
+        .checker-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg); /* 使用卡片背景色 */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* 突出阴影 */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 细微边框 */
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        #targetUrl {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: var(--bg-color); /* 输入框使用主背景色 */
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        #checkButton {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--accent-primary);
+            color: var(--bg-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        #checkButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 结果显示框样式 */
+        .result-box {
+            min-height: 100px;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            background-color: var(--code-bg); /* 模仿代码输出区域背景 */
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.5s ease;
+        }
+
+        .result-box.success {
+            border-color: var(--code-success);
+            background-color: rgba(110, 231, 183, 0.1); 
+        }
+
+        .result-box.fail {
+            border-color: var(--code-fail);
+            background-color: rgba(248, 113, 113, 0.1); 
+        }
+
+        .result-status {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-details {
+            display: block;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-secondary);
+        }
+        
+        /* ==========================================================
+           Features Section 样式
+           ========================================================== */
+        .features {
+            padding: 4rem 10%;
+            background-color: var(--bg-color);
+        }
+
+        .features .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .features .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .features .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+        }
+
+        .features .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .features h3 {
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+        }
+
+        .features p {
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================
+           Tech Details Section 样式
+           ========================================================== */
+        .tech-details {
+            padding: 4rem 10%;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            background-color: var(--code-bg); 
+            border-top: 1px solid var(--code-border);
+            border-bottom: 1px solid var(--code-border);
+        }
+        
+        .tech-details h2 {
+            font-size: 2.5rem;
+            color: var(--accent-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .tech-text {
+            flex: 1;
+        }
+        
+        .tech-text ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .tech-text li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+        
+        .tech-text li::before {
+            content: '✓';
+            color: var(--accent-primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .tech-visual {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Menlo', 'Monospace', monospace;
+            font-size: 1rem;
+            border-left: 4px solid var(--accent-secondary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+            color: var(--code-text); 
+        }
+        
+        .tech-visual .success {
+            color: var(--code-success);
+        }
+
+        /* 移动端适配覆盖 */
+        @media (max-width: 768px) {
+            .tech-details {
+                flex-direction: column;
+            }
+
+            /* 移动端调整负边距 */
+            .http3-check-wrapper {
+                margin-top: -30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="index.html">HTTP/3 Adventure</a>
+        </div>
+        
+        <button class="menu-toggle" id="menuToggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="/" class="active">首页</a> 
+            <a href="/features">核心特性</a>
+            <a href="/tech-principles">技术原理</a>
+            <a href="/status-analysis">现状分析</a> 
+            <a href="/about-site">关于本站</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <h1><span class="h1-icon">🚀</span> HTTP/3 探索与实践</h1>
+        <p>深入了解 HTTP/3 协议 —— 开启下一代网络协议的冒险之旅。</p>
+    </section>
+    
+    <div class="http3-check-wrapper">
+        <section id="http3-check" class="http3-check">
+            
+            <div class="section-title" style="display: none;">
+                <h2>检测其他网站的 HTTP/3 支持</h2>
+                <p>输入一个域名或 URL，我们将尝试检测其是否支持 QUIC/HTTP/3 协议。</p>
+            </div>
+            
+            <div class="checker-container">
+                <div class="input-group">
+                    <input type="url" id="targetUrl" value="" placeholder="请输入要检测的 URL (例如: https://www.google.com)">
+                    <button id="checkButton" disabled>开始检测</button>
+                </div>
+                
+                <div id="checkResult" class="result-box">
+                    <span class="result-status">等待输入...</span>
+                    <span class="result-details" style="display: none;"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>为什么选择 HTTP/3？</h2>
+            <p>不仅仅是升级，而是底层传输协议的彻底革新</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="icon">⚡</div>
+                <h3>极致低延迟</h3>
+                <p>得益于 QUIC 协议的 0-RTT 连接建立特性，页面加载几乎在瞬间完成，显著提升用户留存率。</p>
+            </div>
+            <div class="card">
+                <div class="icon">🛡️</div>
+                <h3>原生安全性</h3>
+                <p>HTTP/3 强制使用 TLS 1.3 加密，将安全性植入传输层基因，彻底杜绝中间人攻击。</p>
+            </div>
+            <div class="card">
+                <div class="icon">🛣️</div>
+                <h3>多路复用无阻塞</h3>
+                <p>解决了 HTTP/2 的队头阻塞（Head-of-Line Blocking）问题，弱网环境下表现更强劲。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="tech-details">
+        <div class="tech-text">
+            <h2>UDP 驱动的革新</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">我们放弃了传统的 TCP 握手包袱，采用基于 UDP 的 QUIC 协议，为您提供更流畅的网络服务。</p>
+            <ul>
+                <li>支持连接迁移（网络切换不断连）</li>
+                <li>QPACK 头部压缩算法</li>
+                <li>改进的拥塞控制机制</li>
+                <li>完全的前向安全性</li>
+            </ul>
+        </div>
+        <div class="tech-visual">
+<p>&gt; Initiating Connection...</p>
+<p>&gt; Protocol: QUIC (UDP)</p>
+<p>&gt; Handshake: 1-RTT / 0-RTT</p>
+<p>&gt; TLS Version: 1.3</p>
+<p class="success">&gt; Connection Established.</p>
+<br>
+<p style="opacity: 0.7">// HTTP/3 is active</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>
+            &copy; 2025 HTTP/3 Adventure Powered by 
+            <a href="mailto:allen@luxiyue.com" style="color: var(--accent-primary); text-decoration: none;">Allen</a>. 
+            Generated by 
+            <a href="https://gemini.google.com/" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">Google Gemini</a>.
+            
+            <br>
+            <a href="https://github.com/luuaiyan/HTTP-3-Website" target="_blank" title="GitHub Source Code" style="text-decoration: none; margin-left: 0.5rem;">
+                <i class="fab fa-github" style="color: var(--accent-primary); font-size: 1.2em; vertical-align: middle; margin-right: 0.25rem;"></i>
+                <span style="color: var(--text-secondary);">Source code</span>
+            </a>
+            
+            <span style="color: var(--text-secondary);">
+                | Licensed under 
+                <a href="/LICENSE.txt" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">MIT</a>.
+            </span>
+        </p>
+    </footer>
+
+    <div class="status-badge">
+        <div class="dot"></div>
+        <span id="protocol-status">Detecting Protocol...</span>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/http3-test.js"></script>
+</body>
+</html>

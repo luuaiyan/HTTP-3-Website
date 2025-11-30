@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>核心特性 - HTTP/3 Adventure</title>
+    
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <style>
+        /* 页面特有的 CSS 样式，覆盖通用样式或定义独有组件 */
+        
+        /* 页面头部 - Page Header 独有背景（覆盖 styles.css 中的基础样式） */
+        .page-header {
+            text-align: center;
+            padding: 4rem 10% 3rem;
+            /* 特有渐变颜色，与 features 页面的主题色相匹配 */
+            background: radial-gradient(circle at 50% 10%, rgba(129, 140, 248, 0.08) 0%, rgba(15, 23, 42, 0) 35%);
+        }
+
+        /* 核心特性交替布局 */
+        .features-content {
+            padding: 4rem 10%;
+        }
+
+        .feature-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-section:last-child {
+            border-bottom: none;
+        }
+
+        .feature-text {
+            flex: 1;
+            padding-right: 3rem;
+            min-width: 300px;
+        }
+
+        .feature-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+        }
+
+        .feature-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-text ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1.5rem;
+        }
+        
+        .feature-text li {
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-text li::before {
+            content: '→';
+            color: var(--accent-primary);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .feature-visual {
+            flex: 1;
+            min-width: 300px;
+            max-width: 45%;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 优化代码片段样式 */
+        .feature-visual .code-snippet {
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            text-align: left;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        /* 代码片段中的自定义颜色 */
+        .code-snippet .highlight {
+            color: var(--accent-primary);
+        }
+        .code-snippet .success {
+            color: var(--code-success);
+        }
+        .code-snippet .fail {
+            color: var(--code-fail);
+        }
+        
+        /* Icon 样式 */
+        .feature-visual .icon-large {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            /* === 🚀 修正：使用实心颜色，并保持高亮 === */
+            color: var(--accent-primary); 
+            /* 移除渐变相关属性，避免将文本填充色设为透明 */
+            -webkit-text-fill-color: unset; 
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+
+        /* 交替布局的 CSS - 反转顺序 */
+        .feature-section:nth-child(even) .feature-text {
+            padding-right: 0;
+            padding-left: 3rem;
+            order: 2;
+        }
+        .feature-section:nth-child(even) .feature-visual {
+            order: 1;
+        }
+
+        /* 移动端适配覆盖 */
+        @media (max-width: 768px) {
+            .feature-section { flex-direction: column; padding: 2rem 0; }
+            .feature-section .feature-text, 
+            .feature-section:nth-child(even) .feature-text { 
+                padding: 0; 
+                order: 1; 
+                margin-bottom: 1.5rem;
+            }
+            .feature-section .feature-visual,
+            .feature-section:nth-child(even) .feature-visual {
+                max-width: 100%;
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="/">HTTP/3 Adventure</a>
+        </div>
+        
+        <button class="menu-toggle" id="menuToggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="/">首页</a> 
+            <a href="/features" class="active">核心特性</a>
+            <a href="/tech-principles">技术原理</a>
+            <a href="/status-analysis">现状分析</a> 
+            <a href="/about-site">关于本站</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <h1><span class="h1-icon">🌌</span> HTTP/3 核心技术深度解析</h1>
+        <p>深入了解 QUIC 协议如何从根本上解决困扰互联网多年的性能和安全挑战，为您带来下一代网络体验。</p>
+    </section>
+
+    <div class="features-content">
+        
+        <section id="quic" class="feature-section">
+            <div class="feature-text">
+                <h2>1. QUIC：UDP 驱动的新一代传输层</h2>
+                <p>HTTP/3 的核心在于 <strong>QUIC (Quick UDP Internet Connections)</strong> 协议。它放弃了传统 TCP，转而使用 <strong>UDP 传输</strong>，并在应用层实现了可靠性、流控制和拥塞控制。</p>
+                <p>这种转变使连接建立更快，并在协议内部集成了加密。</p>
+                <ul>
+                    <li>完全集成 TLS 1.3 加密</li>
+                    <li>自定义的拥塞控制算法</li>
+                    <li>解决操作系统内核限制</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <span class="icon-large">🚀</span>
+                <div class="code-snippet"><span class="success">Protocol Flow:</span><br><br>Client (UDP) &rarr; Server (UDP)<br><br>TLS 1.3 Handshake<br><br>Data Exchange (QUIC Streams)</div>
+            </div>
+        </section>
+        
+        <section id="zerortt" class="feature-section">
+            <div class="feature-text">
+                <h2>2. 0-RTT：握手即完成连接</h2>
+                <p>在首次访问后，QUIC 允许客户端使用缓存的安全参数，在极少数情况下实现 <strong>0-RTT (Zero Round-Trip Time)</strong> 连接建立。</p>
+                <p>这意味着您在发送连接请求的同时即可发送应用数据，大大减少了网络延迟，尤其对于重复访问用户，加载几乎是瞬时的。</p>
+                <ul>
+                    <li>消除了 TCP 的 3 次握手</li>
+                    <li>消除了 TLS 的 2-4 次握手</li>
+                    <li>提高了缓存重连速度</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <span class="icon-large">⏱️</span>
+                <div class="code-snippet">// TCP+TLS 1.2 Handshake:<br><br>Client&rarr;SYN (1-RTT)<br><br>Client&rarr;Data (3-RTT)<br><br>// QUIC+TLS 1.3 Handshake:<br><br><span class="success">Client&rarr;Data (0-RTT)</span></div>
+            </div>
+        </section>
+        
+        <section id="hol-blocking" class="feature-section">
+            <div class="feature-text">
+                <h2>3. 消除队头阻塞（HoL Blocking）</h2>
+                <p>在 TCP 和 HTTP/2 中，如果一个数据包丢失，<strong>整个连接</strong>上的所有流都会被暂停，等待该数据包重传。这被称为队头阻塞（<strong>HoL Blocking</strong>）。</p>
+                <p>QUIC 协议内部使用独立的<strong>流（Streams）</strong>来传输数据，一个流的阻塞不会影响其他流，实现了真正的并行传输，提高了复杂网站的稳定性和速度。</p>
+                <ul>
+                    <li>流之间相互独立</li>
+                    <li>数据包丢失影响范围极小</li>
+                    <li>提高弱网络环境下的表现</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <span class="icon-large">🔗</span>
+                <div class="code-snippet">TCP: <span class="fail">Stream A Blocked</span> | Stream B Paused | Stream C Paused<br><br>QUIC: Stream A (OK) | <span class="fail">Stream B (Lost/Paused)</span> | Stream C (OK)</div>
+            </div>
+        </section>
+        
+        <section id="migration" class="feature-section">
+            <div class="feature-text">
+                <h2>4. 连接迁移：移动网络不断线</h2>
+                <p>QUIC 连接不依赖于传统的 <strong>IP 地址和端口对</strong>。它使用一个 <strong>Connection ID (CID)</strong> 来识别连接。</p>
+                <p>当用户在移动中，从 Wi-Fi 切换到蜂窝数据，或 IP 地址发生变化时，QUIC 连接可以继续保持活跃，无需重新建立会话，大大改善了移动用户体验。</p>
+                <ul>
+                    <li>会话在 IP 变化时保持不变</li>
+                    <li>极大地改善了移动设备体验</li>
+                    <li>透明地切换网络接口</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <span class="icon-large">📱</span>
+                <div class="code-snippet">User: (Wi-Fi: 10.0.0.2) &rarr; (4G: 192.168.1.5)<br><br><span class="success">QUIC: Connection ID ABC is maintained.</span><br><br><span class="fail">TCP: Connection dropped and restarted.</span></div>
+            </div>
+        </section>
+
+        <section id="qpack" class="feature-section">
+            <div class="feature-text">
+                <h2>5. QPACK：高效的头部压缩</h2>
+                <p>HTTP/2 使用 <strong>HPACK</strong> 进行头部压缩。由于 QUIC 的流是独立的（为了解决 HoL 阻塞），如果直接沿用 HPACK，可能会导致压缩状态混乱。因此，HTTP/3 引入了 <strong>QPACK</strong> 协议。</p>
+                <p>QPACK 针对 QUIC 协议进行了优化，允许在<strong>牺牲一点点压缩效率</strong>的前提下，实现<strong>头部字段的无阻塞传输</strong>，进一步提升了连接的并行性和性能。</p>
+                <ul>
+                    <li>专为 QUIC 的独立流设计</li>
+                    <li>避免头部压缩带来的 HoL 阻塞</li>
+                    <li>在性能和并行性之间取得平衡</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <span class="icon-large">📦</span>
+                <div class="code-snippet">// Header Frame Transmission:<br><br>Client sends Header Index (Dynamic)<br><br><span class="success">Server Decodes Header (Non-Blocking)</span><br><br>// Avoids the need to wait for previous streams to complete.</div>
+            </div>
+        </section>
+        </div>
+
+    <footer>
+        <p>
+            &copy; 2025 HTTP/3 Adventure Powered by 
+            <a href="mailto:allen@luxiyue.com" style="color: var(--accent-primary); text-decoration: none;">Allen</a>. 
+            Generated by 
+            <a href="https://gemini.google.com/" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">Google Gemini</a>.
+            
+            <br>
+            <a href="https://github.com/luuaiyan/HTTP-3-Website" target="_blank" title="GitHub Source Code" style="text-decoration: none; margin-left: 0.5rem;">
+                <i class="fab fa-github" style="color: var(--accent-primary); font-size: 1.2em; vertical-align: middle; margin-right: 0.25rem;"></i>
+                <span style="color: var(--text-secondary);">Source code</span>
+            </a>
+            
+            <span style="color: var(--text-secondary);">
+                | Licensed under 
+                <a href="/LICENSE.txt" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">MIT</a>.
+            </span>
+        </p>
+    </footer>
+
+    <div class="status-badge">
+        <div class="dot"></div>
+        <span id="protocol-status">Detecting Protocol...</span>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>

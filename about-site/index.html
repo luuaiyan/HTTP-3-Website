@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于本站 - HTTP/3 Adventure</title>
+    
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <style>
+        /* 页面特有的 CSS 样式 */
+        
+        /* 页面头部 - Page Header 独有背景 */
+        .page-header {
+            background: radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0) 35%); 
+        }
+
+        /* 内容区通用样式 */
+        .content-section {
+            padding: 4rem 10%;
+        }
+
+        .content-section h2 {
+            font-size: 2rem;
+            color: var(--accent-secondary);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .about-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-card h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 1rem;
+        }
+
+        .about-card p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .about-card p strong {
+            color: var(--text-main);
+        }
+
+        /* 列表样式 (为 about-card ul/li 添加美化) */
+        .about-card ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1rem;
+        }
+
+        .about-card li {
+            position: relative;
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .about-card li::before {
+            content: '→';
+            color: var(--accent-secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="/">HTTP/3 Adventure</a>
+        </div>
+        
+        <button class="menu-toggle" id="menuToggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="/">首页</a> 
+            <a href="/features">核心特性</a>
+            <a href="/tech-principles">技术原理</a>
+            <a href="/status-analysis">现状分析</a> 
+            <a href="/about-site" class="active">关于本站</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <h1><span class="h1-icon">💡</span> 关于本站：HTTP/3 探索之旅</h1>
+        <p>本站的诞生，源于对新一代网络协议的好奇心，以及对实际部署挑战的渴望。</p>
+    </section>
+
+    <div class="content-section">
+        
+        <div class="about-card">
+            <h3>📉 始于观察：普及率与托管的悖论</h3>
+            <p>HTTP/3 规范发布已有一段时间，其基于 QUIC 协议带来的<strong>低延迟</strong>和<strong>高效率</strong>优势毋庸置疑。然而，在广阔的互联网世界中，该协议的整体普及率提升速度却不如预期。</p>
+            <p>我们注意到一个有趣的现象：目前大部分启用 HTTP/3 的网站，往往是通过将域名托管到 <strong>Cloudflare</strong>、<strong>Akamai</strong> 等大型 CDN 服务商实现的。对于普通开发者或小型站点而言，自行在源站配置和优化 HTTP/3 仍然存在较高的技术门槛。</p>
+        </div>
+        
+        <div class="about-card">
+            <h3>🔬 兴趣萌发：挑战与实践精神</h3>
+            <p>正是这种“<strong>普及率的悖论</strong>”激发了本站的创建兴趣。我希望能够脱离 CDN 的封装，尝试在原生服务器环境中（例如使用最新版本的 Nginx 或 Caddy）<strong>从零开始配置</strong>完整的 HTTP/3 运行环境。</p>
+            <p>本站的搭建目的，不仅仅是作为一个信息展示平台，更是一次<strong>动手实践</strong>和<strong>记录学习曲线</strong>的尝试。通过这一过程，我能更深入地理解 QUIC 协议栈的实现细节，以及在实际生产环境中可能遇到的 UDP 穿透、防火墙配置等一系列现实问题。</p>
+        </div>
+
+        <div class="about-card">
+            <h3>🚀 展望未来：优化与贡献</h3>
+            <p>本站未来将不满足于简单的 HTTP/3 启用，更希望能够实现以下目标：</p>
+            <ul>
+                <li>探索并分享<strong>最佳的性能优化实践</strong>，例如 QUIC 流量控制、0-RTT 配置技巧等。</li>
+                <li>尝试集成最新的 <strong>WebTransport</strong> 等基于 QUIC 的技术，以展示其在实时应用中的潜力。</li>
+                <li>期望能够将本站的<strong>搭建过程和遇到的困难</strong>整理成系列文章或教程，回馈给社区，帮助更多希望自行部署 HTTP/3 的开发者。</li>
+            </ul>
+        </div>
+        
+    </div>
+
+    <footer>
+        <p>
+            &copy; 2025 HTTP/3 Adventure Powered by 
+            <a href="mailto:allen@luxiyue.com" style="color: var(--accent-primary); text-decoration: none;">Allen</a>. 
+            Generated by 
+            <a href="https://gemini.google.com/" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">Google Gemini</a>.
+            
+            <br>
+            <a href="https://github.com/luuaiyan/HTTP-3-Website" target="_blank" title="GitHub Source Code" style="text-decoration: none; margin-left: 0.5rem;">
+                <i class="fab fa-github" style="color: var(--accent-primary); font-size: 1.2em; vertical-align: middle; margin-right: 0.25rem;"></i>
+                <span style="color: var(--text-secondary);">Source code</span>
+            </a>
+            
+            <span style="color: var(--text-secondary);">
+                | Licensed under 
+                <a href="/LICENSE.txt" target="_blank" style="color: var(--accent-secondary); text-decoration: none;">MIT</a>.
+            </span>
+        </p>
+    </footer>
+
+    <div class="status-badge">
+        <div class="dot"></div>
+        <span id="protocol-status">Detecting Protocol...</span>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
