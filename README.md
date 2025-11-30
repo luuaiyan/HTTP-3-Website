@@ -6,9 +6,7 @@
 
 ![](https://github.com/luuaiyan/HTTP-3-Website/blob/main/demo.png)
 
-# 部署
-
-## 基础环境
+# 基础环境
 
 **服务器：** Ubuntu Server （2核 CPU / 2GB RAM，国内机房）
 
@@ -20,11 +18,11 @@
 
 **cURL：** 基于OpenSSL、nghttp3、ngtcp2编译以支持HTTP/3
 
-## 部署
+# 部署
 
 ***为了方便操作，相关程序均下载/克隆至 `/root/nginx-build` 目录。***
 
-### 一、环境部署
+## 一、环境部署
 
 安装编译工具及相关依赖：
 
@@ -32,7 +30,7 @@
 sudo apt install -y git gcc make libpcre3 libpcre3-dev zlib1g-dev libssl-dev libbrotli-dev libzstd-dev cmake g++ build-essential autoconf libtool pkg-config libpsl-dev
 ```
 
-### 二、基于BoringSSL编译Nginx
+## 二、基于BoringSSL编译Nginx
 
 编译BoringSSL：
 
@@ -159,14 +157,14 @@ systemctl start nginx  # 启动
 systemctl status nginx  # 查看状态
 ```
 
-### 三、安装PHP-FPM
+## 三、安装PHP-FPM
 
 ```bash
 add-apt-repository ppa:ondrej/php
 apt install php8.5-fpm
 ```
 
-### 四、配置和编译支持HTTP/3的cURL
+## 四、配置和编译支持HTTP/3的cURL
 
 定义以下路径变量：
 
@@ -278,7 +276,7 @@ make install
 
 在输出中，应该看到 `Features: ... HTTP3 ...`，说明编译成功了！
 
-### 五、修改 PATH 环境变量 (推荐)
+## 五、修改 PATH 环境变量 (推荐)
 
 可以将上述自定义安装目录添加到 `PATH` 环境变量的**最前面**。这样，直接输入 `curl` 时，系统会优先找到该版本，但不会影响其他系统工具（因为它们通常使用绝对路径）。
 
@@ -294,7 +292,7 @@ source ~/.bashrc
 curl -V
 ```
 
-### 六、部署 cURL 到 Nginx/PHP 环境
+## 六、部署 cURL 到 Nginx/PHP 环境
 
 一般默认 PHP-FPM 进程是以 **`www-data`** 用户运行的，但是系统层的权限为 **`root`** ，无法直接调用。
 
@@ -481,7 +479,7 @@ sudo systemctl reload nginx
 sudo systemctl restart php8.5-fpm
 ```
 
-### 七、Nginx配置模版
+## 七、Nginx配置模版
 
 基本的配置模版为：
 
