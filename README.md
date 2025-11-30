@@ -4,6 +4,8 @@
 
 主要功能是利用PHP-FPM搭建cURL后端，将检测网站是否支持HTTP/3的数据传递到前端实现真实的HTTP/3检测，而非只检查头部 `Alt-Svc 'h3=":443"; ma=86400'` 信息。
 
+![](https://github.com/luuaiyan/HTTP-3-Website/blob/main/demo.png)
+
 # 部署
 
 ## 基础环境
