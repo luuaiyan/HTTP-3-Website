@@ -472,9 +472,7 @@ server {
 
 重启 Nginx 和 PHP-FPM 服务：
 
-Bash
-
-```
+```bash
 sudo systemctl reload nginx
 sudo systemctl restart php8.5-fpm
 ```
